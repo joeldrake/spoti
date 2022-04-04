@@ -34,7 +34,7 @@ export async function fetchAlbum(id: string, token?: string) {
 
 			let tracks = await fetchTracks(trackIds, token);
 			if (Array.isArray(tracks)) {
-				// remove noice
+				// remove noise
 				tracks = tracks.map((track) => ({
 					...track,
 					album: undefined,
@@ -42,7 +42,7 @@ export async function fetchAlbum(id: string, token?: string) {
 				}));
 			}
 
-			return { image: data.images[0], name: data.name, tracks };
+			return { image: data.images[0], name: data.name, artists: data.artists, tracks };
 		}
 
 		return data;
@@ -61,7 +61,7 @@ export async function fetchTracks(trackIds: string[], token?: string) {
 		const res = await fetch(url, customHeaders);
 		const data = await res.json();
 
-		console.log('fetchTracks', data);
+		// console.log('fetchTracks', data);
 
 		if (res.status === 200 && data) {
 			return data.tracks;
