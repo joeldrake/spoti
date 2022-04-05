@@ -6,12 +6,14 @@ export async function get({ url }: RequestEvent) {
 
 	if (code) {
 		const respons = await fetchToken(code);
+		const future = new Date(Date.now() + respons.expires_in * 10000000);
+		const distantFuture = new Date(Date.now() + 10000 * 10000000); // not sure if refresh_token can live longer than accesstoken
 		return {
 			status: 303,
 			headers: {
 				'set-cookie': [
-					`accessToken=${respons.access_token}`,
-					`refreshToken=${respons.refresh_token}`
+					`accessToken=${respons.access_token}; Expires=${future}`,
+					`refreshToken=${respons.refresh_token}; Expires=${distantFuture}`
 				],
 				location: '/'
 			}

@@ -14,7 +14,7 @@
 	{#if album.tracks}
 		<ul>
 			<li>
-				<div class="track">
+				<div class="track heading">
 					<div>#</div>
 					<div>Song</div>
 					<div>Popularity</div>
@@ -24,9 +24,11 @@
 				<li>
 					<div class="track">
 						<div>{track.track_number}.</div>
-						<div><a href={track.external_urls.spotify}>{track.name}</a></div>
-						<div>
-							<progress value={track.popularity} max="100"> {track.popularity}% </progress>
+						<div><a href={`/track?id=${track.id}`}>{track.name}</a></div>
+						<div class="popularity">
+							<progress title={`${track.popularity}%`} value={track.popularity} max="100">
+								{track.popularity}%
+							</progress>
 						</div>
 					</div>
 				</li>
@@ -36,7 +38,7 @@
 
 	<pre>{JSON.stringify(album, null, 4)}</pre>
 {:else}
-	<a href="/login">login</a>
+	<p>Could not find album</p>
 {/if}
 
 <style>
@@ -57,6 +59,8 @@
 	}
 	li {
 		margin-bottom: 0.5rem;
+		padding-bottom: 0.5rem;
+		border-bottom: 1px solid var(--color-most-subtle);
 	}
 
 	a {
@@ -68,8 +72,16 @@
 		grid-template-columns: 1rem 1fr auto;
 		gap: 1rem;
 	}
+	.track.heading {
+		color: var(--color-subtle);
+	}
 
-	progress[value] {
+	.popularity {
+		display: flex;
+		align-items: center;
+	}
+
+	progress {
 		/* Reset the default appearance */
 		-webkit-appearance: none;
 		-moz-appearance: none;
@@ -80,10 +92,17 @@
 		height: 0.5rem;
 	}
 
-	progress[value]::-webkit-progress-bar {
-		border-radius: 0.5rem;
+	@media (max-width: 400px) {
+		progress {
+			width: 20vw;
+		}
 	}
-	progress[value]::-webkit-progress-value {
+
+	progress::-webkit-progress-bar {
+		border-radius: 0.5rem;
+		background-color: var(--color-very-subtle);
+	}
+	progress::-webkit-progress-value {
 		background-color: var(--color-accent);
 		border-radius: 0.5rem;
 	}

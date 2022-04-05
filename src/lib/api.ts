@@ -28,6 +28,7 @@ export async function fetchAlbum(id: string, token?: string) {
 		const data = await res.json();
 
 		console.log('getAlbum', data);
+		console.log('res.status', res.status);
 
 		if (res.status === 200 && data) {
 			const trackIds = getTrackIds(data.tracks);
@@ -67,6 +68,47 @@ export async function fetchTracks(trackIds: string[], token?: string) {
 			return data.tracks;
 		}
 
+		return data;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+export async function fetchTrack(trackId: string, token?: string) {
+	try {
+		const customHeaders = getHeader(token);
+		if (!customHeaders) return;
+
+		const url = `https://api.spotify.com/v1/tracks/${trackId}`;
+		console.log(url);
+
+		const res = await fetch(url, customHeaders);
+		const data = await res.json();
+
+		if (data.album) {
+			// remove noise
+			delete data.album.available_markets;
+			delete data.available_markets;
+		}
+
+		// console.log('fetchTrack', data);
+		return data;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+export async function fetchAudioFeatures(trackId: string, token?: string) {
+	try {
+		const customHeaders = getHeader(token);
+		if (!customHeaders) return;
+
+		const url = `https://api.spotify.com/v1/audio-features/${trackId}`;
+		console.log(url);
+
+		const res = await fetch(url, customHeaders);
+		const data = await res.json();
+		// console.log('fetchAudioFeatures', data);
 		return data;
 	} catch (error) {
 		console.log(error);
